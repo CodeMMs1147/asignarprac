@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "mysql2": "^3.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
