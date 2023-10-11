@@ -4,14 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        h1 {
-            background: red;
-        }
-    </style>
-    <title>Document</title>
 </head>
 <body>
-    <h1>Hello</h1>
+    <h1>Formulario prueba</h1>
+
+    <form id="createTableForm">
+        <label for="tableName">Nombre de la tabla</label>
+        <input type="text" id="tableName" name="tableName" required>
+
+        <label for="fieldName">Nombre del campo</label>
+        <input type="text" id="fieldName" name="fieldName" required>
+
+        <label for="fieldType">Tipo de campo</label>
+        <input type="text" id="fieldType" name="fieldType" required>
+
+        <button type="submit">Crear tabla</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        const createTableForm = document.getElementById('createTableForm');
+        const resultDiv = document.getElementById('result');
+
+        createTableForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tableName = document.getElementById('tableName').value;
+            const fieldName = document.getElementById('fieldName').value;
+            const fieldType = document.getElementById('fieldType').value;
+
+            try {
+                const response = await fetch('/createTable', {
+                    method: 'POST',
+                    Headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tableName,
+                        fields: [
+                            {
+                                name: fieldName,
+                                type: fieldType
+                            }
+                        ],
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.text();
+                    resultDiv.textContent = data;
+                } else {
+                    resultDiv.textContent = 'Error al crear tabla';
+                }
+            } catch (error) {
+                resultDiv.textContent = 'Error en la solicitud: ' + error.message;
+            }
+        })
+    </script>
 </body>
 </html>

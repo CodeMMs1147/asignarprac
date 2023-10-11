@@ -84,9 +84,30 @@ const server = http.createServer((req, res) => {
         });
 
         req.on('end', async () => {
-            
-        })
+            try {
+                const requestBody = JSON.parse(body);
+                const { tableName, fields } = requestBody;
+
+                await dbManager.connect();
+                await dbManager.createTable(tableName, fields);
+                await dbManager.close();
+
+
+                res.writeHead(20, {'Content-Type': 'text/plain' });
+                res.end(`Tabla${tableName} creada`);
+            } catch (error) {
+                res.writeHead(500, { 'Content-type': 'text-plain'});
+                res.end(`Error ${error.message}`);
+            }
+        });
+    } else {
+        res.writeHead(404, { 'Content-type': 'text-plain' });
+        res.end('Pagina nor encontrada');
     }
+});
+
+server.listen(3000, () => {
+    console.log('Server is listening on the port 3000')
 })
 
 
